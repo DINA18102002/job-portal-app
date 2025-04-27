@@ -2,9 +2,11 @@ import { ClassNames } from "@emotion/react";
 import { IconAnchor , IconBell, IconSettings } from '@tabler/icons-react';
 import { Indicator, Avatar } from '@mantine/core';
 import NavLinks from "./NavLinks";
+import { useLocation } from "react-router-dom";
 
 function Header(){
-    return(
+    const location = useLocation();
+    return location.pathname != "/signup" && location.pathname != "/login" ? (
         <div className="w-full bg-mine-shaft-950 h-20 text-white flex justify-between px-6 items-center font-['poppins']">
             <div className="flex gap-3 items-center text-bright-sun-400">
                 <IconAnchor className="h-8 w-8" stroke={2.5} />
@@ -28,7 +30,7 @@ function Header(){
                 
             </div>
         </div>
-    );
+    ) : <></>;
     
 }
 export default Header;
