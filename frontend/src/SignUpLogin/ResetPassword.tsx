@@ -1,8 +1,10 @@
 import { Button, Modal, PasswordInput, PinInput, TextInput } from "@mantine/core";
 import { IconLock, IconMail } from "@tabler/icons-react";
 import { useState } from "react";
-import { sendOtp, verifyOtp } from "../Services/UserService";
+import { changePassword, sendOtp, verifyOtp } from "../Services/UserService";
 import { signupValidation } from "../Services/FormValidation";
+import { errorNotification, successNotification } from "../Services/NotoficationService";
+import { useInterval } from "@mantine/hooks";
 
 const ResetPassword = (props:any) =>{
     const [email, setEmail] = useState("");
@@ -11,34 +13,66 @@ const ResetPassword = (props:any) =>{
     const [otpSent, setOtpSent] = useState(false)
     const [otpSending, setOtpSending] = useState(false)
     const [verified, setverified] = useState(false)
+    const [resendLoader, setResendLoader] = useState(false);
+    const [seconds, setSeconds] = useState(60);
+    const interval = useInterval(()=>{
+        if(seconds===0){
+            setResendLoader(false);
+            setSeconds(60);
+            interval.stop();
+        }else setSeconds((s)=> s - 1)
+    },1000);
 
     const handleSendOtp = ()=>{
         setOtpSending(true);
         sendOtp(email).then((res)=>{
             console.log(res);
+            successNotification("OTP sent successfully", "Enter OTP to reset.")
             setOtpSent(true);
             setOtpSending(false);
+            setResendLoader(true);
+            interval.start()
         }).catch((err)=>{
             console.log(err);
             setOtpSending(false);
+            errorNotification("OTP sending Failed", err.response.data.errrorMessage);
         })
     }
 
     const handleVerifyOTP = (otp:string) =>{
         verifyOtp(email, otp).then((res)=>{
             console.log(res);
+            successNotification("OTP Verified", "Enter new Password.")
             setverified(true);
+            // setResendLoader(true);   
         }).catch((err)=>{
             console.log(err);
+            errorNotification("OTP Verification Failed", err.response.data.errrorMessage)
         })
     }
 
     const resendOtp = () =>{
-
+        if(resendLoader)return
+        handleSendOtp();
     }
 
     const changeEmail = () =>{
         setOtpSent(false);
+        setResendLoader(false);
+        setSeconds(60);
+        setverified(false);
+        interval.stop();
+    }
+
+    const handleResetPassword = ()=>{
+        changePassword(email, password).then((res)=>{
+            console.log(res);
+            successNotification("password Changed", "Login with the new Password.")
+            props.close();
+        }).catch((err)=>{
+            console.log(err);
+            errorNotification("Password reset Failed", err.response.data.errrorMessage)
+        })
     }
 
     return(
@@ -49,7 +83,7 @@ const ResetPassword = (props:any) =>{
                     label="Email" 
                     withAsterisk
                     placeholder="Your Email"
-                    rightSection={<Button size="xs" className="mr-1" loading={otpSending} onClick={handleSendOtp} autoContrast variant="filled" disabled={email==="" || otpSent} >Login</Button>}
+                    rightSection={<Button size="xs" className="mr-1" loading={otpSending && !otpSent} onClick={handleSendOtp} autoContrast variant="filled" disabled={email==="" || otpSent} >Login</Button>}
                     rightSectionWidth="xl"
                     />
                 {
@@ -59,7 +93,7 @@ const ResetPassword = (props:any) =>{
                 {
                     otpSent && !verified &&
                     <div className="flex gap-2">
-                        <Button fullWidth color="bright-sun.4" loading={otpSending} onClick={resendOtp} autoContrast variant="light" >Resend</Button>
+                        <Button fullWidth color="bright-sun.4" loading={otpSending} onClick={resendOtp} autoContrast variant="light" >{resendLoader?seconds:"Resend"}</Button>
                         <Button fullWidth color="bright-sun.4" onClick={changeEmail} autoContrast variant="filled" >Change Email</Button>
                     </div>
                 }
@@ -76,7 +110,7 @@ const ResetPassword = (props:any) =>{
                   />
                 )}
                 {
-                    verified && <Button onClick={()=>{props.changePass(email, password)}} autoContrast variant="filled" >Change Password</Button>
+                    verified && <Button onClick={handleResetPassword} autoContrast variant="filled" >Change Password</Button>
                 }
 
             </div>

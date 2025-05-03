@@ -1,4 +1,4 @@
-import { Anchor, Button, Checkbox, Group, PasswordInput, Radio, rem, TextInput } from "@mantine/core";
+import { Anchor, Button, Checkbox, Group, LoadingOverlay, PasswordInput, Radio, rem, TextInput } from "@mantine/core";
 import { IconAt, IconCheck, IconLock, IconMail, IconX } from "@tabler/icons-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,23 +6,28 @@ import { isConditionalExpression } from "typescript";
 import { registerUser } from "../Services/UserService";
 import { signupValidation } from "../Services/FormValidation";
 import { notifications } from "@mantine/notifications";
+import { errorNotification, successNotification } from "../Services/NotoficationService";
 
-const form = {
-    name:"",
-    email:"",
-    password:"",
-    confirmPassword:"",
-    accountType:"APPLICANT"
 
-}
 
 const SignUp = () =>{
+
+    const form = {
+        name:"",
+        email:"",
+        password:"",
+        confirmPassword:"",
+        accountType:"APPLICANT"
+    
+    }
     
     const [data, setData] = useState<{[key:string]:string}>(form);
     const [formError, setFormError] = useState<{[key:string]:string}>(form);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange=(event:any)=>{
+
         if(typeof(event)=="string"){
             setData({...data, accountType:event});
             return;
@@ -41,6 +46,7 @@ const SignUp = () =>{
         }
     }
     const handleSubmit = () =>{
+        
         let valid = true, newFormError:{[key:string]:string}={};
         for(let key in data){
             if(key=="accountType")continue;
@@ -50,39 +56,33 @@ const SignUp = () =>{
         }
         setFormError(newFormError);
         
-        if(valid===true){  
+        if(valid===true){ 
+            setLoading(true); 
             registerUser(data).then((res)=>{
                 console.log(res);
                 setData(form);
-                notifications.show({
-                    title: 'Registered Successfully',
-                    message: 'Redirecting to login page...',
-                    withCloseButton: true,
-                    icon: <IconCheck style={{width:"90%", height:"90%"}}/>,
-                    color: 'teal',
-                    withBorder: true,
-                    className:"!border-green-500"
-                  })
+                successNotification('Registered Successfully','Redirecting to login page...')
                   setTimeout(()=>{
+                    setLoading(false);
                     navigate("/login");
                   }, 4000)
                 
             }).catch((err)=>{
+                setLoading(false);
                 console.log(err);
-                notifications.show({
-                    title: 'Registeration faliled',
-                    message: err.response.data.errrorMessage,
-                    withCloseButton: true,
-                    icon: <IconX style={{width:"90%", height:"90%"}}/>,
-                    color: 'red',
-                    withBorder: true,
-                    className:"!border-red-500"
-                  })
+                errorNotification('Registeration faliled',err.response.data.errrorMessage)
             })
         }
     }
 
-    return(
+    return(<>
+        <LoadingOverlay
+            visible={loading}
+            zIndex={1000}
+            className="translate-x-1/2"
+            overlayProps={{radius:'sm', blur:2}}
+            loaderProps={{color:'bright-sun.4', type:'bars'}}
+        />
         <div className="w-1/2 px-20 flex flex-col justify-center gap-3">
             <div className="text-2xl font-semibold">Create Account</div>
             <TextInput  
@@ -140,9 +140,10 @@ const SignUp = () =>{
                 label={<>I accept{` `}<Anchor>terms and Conditions.</Anchor>  </>}
                 autoContrast
             />
-            <Button onClick={handleSubmit} variant="filled" autoContrast>SignUp</Button>
+            <Button loading={loading} onClick={handleSubmit} variant="filled" autoContrast>SignUp</Button>
             <div className="mx-auto">have an Account? <span onClick={()=>{navigate("/login"); setFormError(form); setData(form)}} className="text-bright-sun-400 hover:underline cursor-pointer">Login</span></div>
             </div>
+            </>
     )
 }
 export default SignUp;
