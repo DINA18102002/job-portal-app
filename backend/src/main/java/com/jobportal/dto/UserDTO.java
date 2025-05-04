@@ -24,8 +24,9 @@ public class UserDTO {
 	 @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,15}$", message = "{user.password.invalid}")
 	 private String password;
 	 private AccountType accountType;
+	 private Long ProfileId;
 	 
 	 public User toEntity() {
-		 return new User(this.id, this.name, this.email, this.password, this.accountType);
+		 return new User(this.id, this.name, this.email, this.password, this.accountType, this.ProfileId);
 	 }
 }
