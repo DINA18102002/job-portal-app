@@ -4,13 +4,34 @@ import fields from "../Data/Profile";
 import SelectInput from "./SelectInput";
 import { useState } from "react";
 import { MonthPicker, MonthPickerInput } from "@mantine/dates";
+import { useSelector } from "react-redux";
+import { isNotEmpty, useForm } from "@mantine/form";
 
 const ExpInput = (props:any) =>{
     const select = fields;
+    const profile = useSelector((state:any)=>state.profile)
     const [desc, setDesc] = useState("");
     const [startDate, setStartDate] = useState<Date | null>(new Date());
     const [endDate, setEndDate] = useState<Date | null>(new Date());
     const [checked, setChecked] = useState(false);
+    const form = useForm({
+        mode:'controlled',
+        initialValues:{
+            title:'',
+            company:'',
+            location:'',
+            description:'',
+            startDate:new Date(),
+            endDate:new Date(),
+            working:false
+        },
+        validate:{
+            title:isNotEmpty("Title is required"),
+            company:isNotEmpty("Company is required"),
+            location:isNotEmpty("location is required"),
+        }
+    })
+
     return(
         <div className="flex flex-col gap-3">
             <div className="text-lg font-semibold">{props.add ?"Add":"Edit"} experience</div>
