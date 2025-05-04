@@ -10,21 +10,10 @@ import { changeProfile } from "../Slices/ProfileSlice";
 import { successNotification } from "../Services/NotoficationService";
 
 const ExpInput = (props: any) => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const select = fields;
   const profile = useSelector((state: any) => state.profile);
-  useEffect(() => {
-    if (!props.add)
-      form.setValues({
-        title: props.title,
-        company: props.company,
-        location: props.location,
-        description: props.description,
-        startDate: new Date(props.startDate),
-        endDate: new Date(props.endDate),
-        working: props.working,
-      });
-  }, []);
+
   const form = useForm({
     mode: "controlled",
     validateInputOnChange: true,
@@ -44,6 +33,26 @@ const ExpInput = (props: any) => {
       description: isNotEmpty("Description is required"),
     },
   });
+
+  useEffect(() => {
+    if (!props.add)
+      form.setValues({
+        title: props.title || "",
+      company: props.company || "",
+      location: props.location || "",
+      description: props.description || "",
+      startDate:
+        props.startDate && !isNaN(new Date(props.startDate).getTime())
+          ? new Date(props.startDate)
+          : new Date(),
+      endDate:
+        props.endDate && !isNaN(new Date(props.endDate).getTime())
+          ? new Date(props.endDate)
+          : new Date(),
+      working: props.working || false,
+      });
+  }, []);
+
   const handleSave = () => {
     form.validate();
     if (!form.isValid()) return;
@@ -61,7 +70,10 @@ const ExpInput = (props: any) => {
     let updatedProfile = { ...profile, experience: exp };
     props.setEdit(false);
     dispatch(changeProfile(updatedProfile));
-    successNotification("Success", `Experience ${props.add?"Added":"Updated"}  successfully`);
+    successNotification(
+      "Success",
+      `Experience ${props.add ? "Added" : "Updated"}  successfully`
+    );
   };
 
   return (
@@ -85,20 +97,39 @@ const ExpInput = (props: any) => {
 
       <div className="flex gap-10 [&>*]:w-1/2">
         <MonthPickerInput
-          {...form.getInputProps("startDate")}
           label="Start date"
           withAsterisk
-          maxDate={form.getValues().endDate || undefined}
+          value={form.values.startDate}
+          onChange={(value) =>
+            form.setFieldValue("startDate", value ?? new Date())
+          }
+          maxDate={
+            form.values.endDate instanceof Date &&
+            !isNaN(form.values.endDate.getTime())
+              ? form.values.endDate
+              : undefined
+          }
           placeholder="Pick Date"
+          valueFormat="MMMM YYYY"
         />
+
         <MonthPickerInput
-          {...form.getInputProps("endDate")}
           label="End date"
-          disabled={form.getValues().working}
           withAsterisk
-          maxDate={new Date() || undefined}
-          minDate={form.getValues().startDate || undefined}
+          value={form.values.endDate}
+          onChange={(value) =>
+            form.setFieldValue("endDate", value ?? new Date())
+          }
+          disabled={form.values.working}
+          minDate={
+            form.values.startDate instanceof Date &&
+            !isNaN(form.values.startDate.getTime())
+              ? form.values.startDate
+              : undefined
+          }
+          maxDate={new Date()}
           placeholder="Pick Date"
+          valueFormat="MMMM YYYY"
         />
       </div>
       <Checkbox

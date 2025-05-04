@@ -1,13 +1,17 @@
 import {
   ActionIcon,
+  Avatar,
   Button,
   Divider,
+  FileInput,
+  Overlay,
   TagsInput,
   Textarea,
 } from "@mantine/core";
 import {
   IconBriefcase,
   IconDeviceFloppy,
+  IconEdit,
   IconMapPin,
   IconPencil,
   IconPlus,
@@ -22,10 +26,13 @@ import CertiInput from "./CertiInput";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile } from "../Services/ProfileService";
 import Info from "./Info";
-import { setProfile } from "../Slices/ProfileSlice";
+import { changeProfile, setProfile } from "../Slices/ProfileSlice";
 import About from "./About";
 import Skills from "./Skills";
 import Experience from "./Experience";
+import Certificate from "./Certificate";
+import { useHover } from "@mantine/hooks";
+import { successNotification } from "../Services/NotoficationService";
 
 const Profile = (props: any) => {
   const dispatch = useDispatch();
@@ -37,6 +44,7 @@ const Profile = (props: any) => {
   const [skills, setSkills] = useState(props.skills);
   const [addExp, setAddExp] = useState(false);
   const [addCerti, setAddCerti] = useState(false);
+  const { hovered, ref } = useHover();
   const handleEdit = (index: any) => {
     const newEdit = [...edit];
     newEdit[index] = !newEdit[index];
@@ -51,15 +59,55 @@ const Profile = (props: any) => {
         console.log(error);
       });
   }, []);
+  const handleFileChange = async (image: any) => {
+    let picture: any = await getBase64(image);
+    let updatedProfile = { ...profile, picture: picture.split(",")[1] };
+    dispatch(changeProfile(updatedProfile));
+    successNotification("Success", "Profile Picture updated Successfully");
+  };
+  const getBase64 = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
   return (
     <div className="w-4/5 mx-auto">
       <div className="relative">
         <img className="rounded-t-2xl" src="/Profile/banner.jpg" alt="" />
-        <img
-          className="h-48 w-48 rounded-full -bottom-1/3 absolute left-3 border-mine-shaft-950 border-8"
-          src="/avatar.png"
-          alt=""
-        />
+        <div
+          ref={ref}
+          className="absolute flex items-center justify-center -bottom-1/3 left-3"
+        >
+          <Avatar
+            className="!h-48 !w-48 rounded-full border-mine-shaft-950 border-8"
+            src={
+              profile.picture
+                ? `data:image/jpeg;base64,${profile.picture}`
+                : "/Avatar.png"
+            }
+            alt=""
+          />
+
+          {hovered && (
+            <Overlay
+              className="!rounded-full"
+              color="#000"
+              backgroundOpacity={0.75}
+            />
+          )}
+          {hovered && <IconEdit className="absolute z-[300] !w-12 !h-12" />}
+          {hovered && (
+            <FileInput
+              onChange={handleFileChange}
+              className="absolute [&_*]:!rounded-full z-[301] [&_*]:!h-full !h-full w-full "
+              accept="image/png, image/jpeg"
+              variant="transparent"
+            />
+          )}
+        </div>
       </div>
       <div className="px-3 mt-16 pt-10">
         <Info />
@@ -67,44 +115,11 @@ const Profile = (props: any) => {
       <Divider mx="xs" my="xl" />
       <About />
       <Divider mx="xs" my="xl" />
-      <Skills/>
+      <Skills />
       <Divider mx="xs" my="xl" />
-      <Experience/>
+      <Experience />
       <Divider mx="xs" my="xl" />
-      <div className="px-3 ">
-        <div className="text-2xl font-semibold mb-5 flex justify-between">
-          Certifications{" "}
-          <div className="flex gap-2">
-            {" "}
-            <ActionIcon
-              onClick={() => setAddCerti(true)}
-              size="lg"
-              color="bright-sun.4"
-              variant="subtle"
-            >
-              <IconPlus className="h-4/5 w-4/5" />
-            </ActionIcon>{" "}
-            <ActionIcon
-              onClick={() => handleEdit(4)}
-              size="lg"
-              color="bright-sun.4"
-              variant="subtle"
-            >
-              {edit[4] ? (
-                <IconDeviceFloppy className="h-4/5 w-4/5" />
-              ) : (
-                <IconPencil className="h-4/5 w-4/5" />
-              )}
-            </ActionIcon>{" "}
-          </div>{" "}
-        </div>
-        <div className="flex flex-col gap-8">
-          {profile?.certifications?.map((certi: any, index: number) => (
-            <CertiCard key={index} edit={edit[4]} {...certi} />
-          ))}
-          {addCerti && <CertiInput setAddCerti={setAddCerti} />}
-        </div>
-      </div>
+      <Certificate />
     </div>
   );
 };
