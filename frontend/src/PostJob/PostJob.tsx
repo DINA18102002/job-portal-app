@@ -8,8 +8,10 @@ import {
   errorNotification,
   successNotification,
 } from "../Services/NotoficationService";
+import { useNavigate } from "react-router-dom";
 
 const PostJob = () => {
+  const navigate = useNavigate();
   const select = fields;
 
   const form = useForm({
@@ -43,6 +45,7 @@ const PostJob = () => {
     postJob(form.getValues())
       .then((res) => {
         successNotification("Success", "Job Posted Successfully");
+        navigate("/posted-job");
       })
       .catch((err) => {
         console.log(err);
