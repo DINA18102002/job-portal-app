@@ -15,16 +15,18 @@ const PostJob = () => {
   const select = fields;
 
   const form = useForm({
+    mode:'controlled',
+    validateInputOnChange:true,
     initialValues: {
-      jobTitle: "",
-      company: "",
-      experience: "",
-      jobType: "",
-      location: "",
-      packageOffered: "",
+      jobTitle: '',
+      company: '',
+      experience: '',
+      jobType: '',
+      location: '',
+      packageOffered: '',
       skillsRequired: [],
-      about: "",
-      description: content,
+      about: '',
+      description: content
     },
     validate: {
       jobTitle: isNotEmpty("Title is Required"),
@@ -36,7 +38,7 @@ const PostJob = () => {
       skillsRequired: isNotEmpty("SkillsRequired is Required"),
       about: isNotEmpty("About is Required"),
       description: isNotEmpty("Description is Required"),
-    },
+    }
   });
 
   const handlePost = () => {
@@ -49,7 +51,10 @@ const PostJob = () => {
       })
       .catch((err) => {
         console.log(err);
-        errorNotification("Error", "Something Went wirong please try again later");
+        errorNotification(
+          "Error",
+          err.response.data.errorMessage
+        );
       });
   };
 

@@ -37,7 +37,7 @@ const SelectInput = (props: any) => {
         if (val === "$create") {
           setData((current) => [...current, search]);
           setValue(search);
-          props.form.setFieldValue(props.name, val);
+          props.form.setFieldValue(props.name, search);
         } else {
           setValue(val);
           setSearch(val);

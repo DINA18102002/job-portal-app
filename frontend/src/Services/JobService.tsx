@@ -1,5 +1,4 @@
 import axios from "axios";
-import { error } from "console";
 const base_url = "http://localhost:8080/jobs/";
 const postJob = async (job: any) => {
   return axios
@@ -17,7 +16,7 @@ const getAllJobs = async () => {
       throw error;
     });
 };
-const getJob = async (id: any) => {
+const getJob = async (id:any) => {
   return axios
     .get(`${base_url}get/${id}`)
     .then((result) => result.data)
