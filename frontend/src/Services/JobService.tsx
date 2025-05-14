@@ -16,7 +16,7 @@ const getAllJobs = async () => {
       throw error;
     });
 };
-const getJob = async (id:any) => {
+const getJob = async (id: any) => {
   return axios
     .get(`${base_url}get/${id}`)
     .then((result) => result.data)
@@ -24,5 +24,13 @@ const getJob = async (id:any) => {
       throw error;
     });
 };
+const applyJob = async (id: any, applicant: any) => {
+  return axios
+    .post(`${base_url}apply/${id}`, applicant)
+    .then((result) => result.data)
+    .catch((error) => {
+      throw error;
+    });
+};
 
-export { postJob, getAllJobs, getJob };
+export { postJob, getAllJobs, getJob, applyJob };

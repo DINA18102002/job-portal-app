@@ -3,8 +3,9 @@ import {
 } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import ApplicationForm from "./ApplicationForm";
+import { timeAgo } from "../Services/Utilities";
 
-const ApplyJobComp = () => {
+const ApplyJobComp = (props:any) => {
   const navigate = useNavigate();
 
   return (
@@ -12,12 +13,12 @@ const ApplyJobComp = () => {
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
           <div className="p-3 bg-mine-shaft-800 rounded-xl">
-            <img className="h-14 " src={`/Icons/Google.png`} alt="" />
+            <img className="h-14 " src={`/Icons/${props.company}.png`} alt="" />
           </div>
           <div className="flex flex-col">
-            <div className="font-semibold text-2xl">Software Engineer</div>
+            <div className="font-semibold text-2xl">{props.jobTitle}</div>
             <div className="text-lg text-mine-shaft-300">
-              Google &bull; 3 days ago &bull; 48 Applicants
+              {props.company} &bull; {timeAgo(props.postTime)} &bull; {props.applicants?props.applicants.length:0} Applicants
             </div>
           </div>
         </div>

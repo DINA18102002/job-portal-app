@@ -6,13 +6,13 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.jobportal.dto.ApplicantDTO;
 import com.jobportal.dto.JobDTO;
 import com.jobportal.dto.JobStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @AllArgsConstructor
@@ -24,7 +24,7 @@ public class Job {
 	private Long id;
 	private String jobTitle;
 	private String company;
-	private List<ApplicantDTO> applicants;
+	private List<Applicant> applicants; 
 	private String about;
 	private String experience;
 	private String jobType;
@@ -36,6 +36,6 @@ public class Job {
 	private JobStatus jobStatus;
 	
 	public JobDTO toDTO() {
-		return new JobDTO(this.id, this.jobTitle, this.company, this.applicants, this.about, this.experience, this.jobType, this.location, this.packageOffered, this.postTime, this.description, this.skillsRequired, this.jobStatus);
+		return new JobDTO(this.id, this.jobTitle, this.company, this.applicants!=null?this.applicants.stream().map((x)->x.toDTO()).toList():null, this.about, this.experience, this.jobType, this.location, this.packageOffered, this.postTime, this.description, this.skillsRequired, this.jobStatus);
 	}
 }
