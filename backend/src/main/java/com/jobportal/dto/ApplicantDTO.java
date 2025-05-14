@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Applicant {
+public class ApplicantDTO {
 	private Long applicantId;
 	private LocalDateTime timeStamp;
 	private ApplicationStatus applicationStatus;

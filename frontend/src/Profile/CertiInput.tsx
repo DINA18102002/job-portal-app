@@ -31,28 +31,28 @@ const CertiInput = (props: any) => {
   const handleSave = () => {
     form.validate();
     if (!form.isValid()) return;
-  
+
     let certi = [...profile.certifications];
     const newCert = form.getValues();
-  
+
     // Ensure issueDate is a valid Date before calling toISOString()
     const issueDate = new Date(newCert.issueDate);
     if (isNaN(issueDate.getTime())) {
       console.warn("Invalid issue date:", newCert.issueDate);
       return;
     }
-  
-    newCert.issueDate = issueDate
+
+    newCert.issueDate = issueDate;
     certi.push(newCert);
-  
+
     const updatedProfile = { ...profile, certifications: certi };
-  
+
     props.setEdit(false);
     dispatch(changeProfile(updatedProfile));
-  
+
     successNotification("Success", "Certifications updated successfully");
   };
-  
+
   return (
     <div className="flex flex-col gap-3">
       <div className="text-lg font-semibold">Add Certificate</div>
