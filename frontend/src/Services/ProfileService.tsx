@@ -15,7 +15,7 @@ const updateProfile = async (profile: any) => {
     throw new Error("Profile ID is required for update");
   }
   return axios
-    .put(`${base_url}update/${profile.id}`, profile)
+    .put(`${base_url}update`, profile)
     .then((res) => res.data)
     .catch((error) => {
       throw error;
