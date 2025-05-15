@@ -17,7 +17,7 @@ const successNotification = (title:string, message:string)=>{
 const errorNotification = (title:string, message:string) =>{
     notifications.show({
         title: title,
-        message: message,
+        message: message || "Something went wrong. Please try again later.",
         withCloseButton: true,
         icon: <IconX style={{width:"90%", height:"90%"}}/>,
         color: 'red',

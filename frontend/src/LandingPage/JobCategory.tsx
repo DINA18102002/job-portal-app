@@ -14,7 +14,7 @@ const JobCategory = () =>{
                 previousControlIcon={<IconArrowLeft size={16} />}>
                 {
                     jobCategory.map((category, index) =>
-                        <Carousel.Slide>
+                        <Carousel.Slide key={index}>
                                 <div className="flex flex-col items-center w-64 gap-2 border border-bright-sun-400 rounded-xl p-5 hover:cursor-pointer hover:shadow-[0_0_5px_2px_black] my-5 transition duration-300 !shadow-bright-sun-300">
                                     <div className="p-2 bg-bright-sun-300 rounded-full">
                                         <img className="h-8 w-8" src={`/Category/${category.name}.png`} alt={category.name} />
