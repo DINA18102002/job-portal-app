@@ -30,9 +30,9 @@ public class ProfileAPI {
 		return new ResponseEntity<>(profileService.getProfile(id), HttpStatus.OK);
 	}
 	
-	@PutMapping("/update")
-	public ResponseEntity<ProfileDTO> updateProfile(@RequestBody ProfileDTO profileDTO) throws JobPortalException{
-		return new ResponseEntity<>(profileService.updateProfile(profileDTO), HttpStatus.OK);
+	@PutMapping("/update/{id}")
+	public ResponseEntity<ProfileDTO> updateProfile(@PathVariable Long id ,@RequestBody ProfileDTO profileDTO) throws JobPortalException{
+		return new ResponseEntity<>(profileService.updateProfile(id, profileDTO), HttpStatus.OK);
 	}
 	
 }

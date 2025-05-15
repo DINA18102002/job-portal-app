@@ -13,13 +13,15 @@ const JobCard = (props: any) => {
   const dispatch = useDispatch();
   const profile = useSelector((state: any) => state.profile);
   const handleSaveJob = () => {
-    let savedJobs = Array.isArray(profile.savedJobs) ? [...profile.savedJobs] : [];
+    let savedJobs = Array.isArray(profile.savedJobs)
+      ? [...profile.savedJobs]
+      : [];
     if (savedJobs?.includes(props.id)) {
       savedJobs = savedJobs?.filter((id: any) => id !== props.id);
     } else {
       savedJobs = [...savedJobs, props.id];
     }
-    let updatedProfile = { ...profile, savedJobs: savedJobs };
+    let updatedProfile = { ...profile, savedJobs: savedJobs, id:profile.id };
     dispatch(changeProfile(updatedProfile));
   };
   return (
@@ -35,7 +37,7 @@ const JobCard = (props: any) => {
               <Link to="/company" className="hover:text-mine-shaft-200">
                 {props.company}
               </Link>
-              &#x2022; {props.applicants ? props.applicants.length : 0}{" "}
+              &#x2022; {props.applicants ? props.applicants.length : 0}
               Applicants
             </div>
           </div>
