@@ -35,11 +35,12 @@ const JobDesc = (props: any) => {
   };
   useEffect(() => {
     if (
-      props.applicants?.filter((applicant: any) => applicant.applicantId == user.id)
-        .length > 0
+      props.applicants?.filter(
+        (applicant: any) => applicant.applicantId == user.id
+      ).length > 0
     ) {
       setApplied(true);
-    }
+    } else setApplied(false);
   }, [props]);
   return (
     <div className="w-3/4">
