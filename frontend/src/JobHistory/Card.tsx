@@ -7,8 +7,24 @@ import {
 import { Button, Divider, Text } from "@mantine/core";
 import { Link } from "react-router-dom";
 import { timeAgo } from "../Services/Utilities";
+import { changeProfile } from "../Slices/ProfileSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Card = (props: any) => {
+  const dispatch = useDispatch();
+  const profile = useSelector((state:any)=>state.profile);
+  const handleSaveJob = () => {
+    let savedJobs = Array.isArray(profile.savedJobs)
+      ? [...profile.savedJobs]
+      : [];
+    if (savedJobs?.includes(props.id)) {
+      savedJobs = savedJobs?.filter((id: any) => id !== props.id);
+    } else {
+      savedJobs = [...savedJobs, props.id];
+    }
+    let updatedProfile = { ...profile, savedJobs: savedJobs, id: profile.id };
+    dispatch(changeProfile(updatedProfile));
+  };
   return (
     <div className="bg-mine-shaft-900 p-4 w-75 flex flex-col gap-3 rounded-xl hover:shadow-[0_0_5px_1px_yellow] !shadow-bright-sun-400">
       <div className="flex justify-between">
@@ -24,10 +40,16 @@ const Card = (props: any) => {
             </div>
           </div>
         </div>
-        {props.saved ? (
-          <IconBookmarkFilled className="text-bright-sun-400 cursor-pointer" />
+        {profile.savedJobs?.includes(props.id) ? (
+          <IconBookmarkFilled
+            onClick={handleSaveJob}
+            className="text-bright-sun-400 cursor-pointer"
+          />
         ) : (
-          <IconBookmark className="text-mine-shaft-300 cursor-pointer" />
+          <IconBookmark
+            onClick={handleSaveJob}
+            className="text-mine-shaft-300 hover:text-bright-sun-400 cursor-pointer"
+          />
         )}
       </div>
       <div className="flex gap-2 [&>div]:py-1 [&>div]:px-2 [&>div]:bg-mine-shaft-800 [&>div]:text-bright-sun-400 [&>div]:rounded-lg text-xs">

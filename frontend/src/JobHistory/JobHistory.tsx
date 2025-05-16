@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 
 const JobHistory = () => {
   const profile = useSelector((state: any) => state.profile);
+  const user = useSelector((state: any) => state.user);
   const [activeTab, setActiveTab] = useState<any>("APPLIED");
   const [jobList, setJobList] = useState<any>([]);
   const [showList, setShowList] = useState<any>([]);
@@ -15,6 +16,20 @@ const JobHistory = () => {
     getAllJobs()
       .then((res) => {
         setJobList(res);
+        setShowList(
+          res.filter((job: any) => {
+            let found = false;
+            job.applicants?.forEach((applicant: any) => {
+              if (
+                applicant.applicantId == user.id &&
+                applicant.applicantStatus == "APPLIED"
+              ) {
+                found = true;
+              }
+            });
+            return found;
+          })
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -28,14 +43,18 @@ const JobHistory = () => {
       );
     } else {
       setShowList(
-        jobList.filter(
-          (job: any) =>
-            job.applicants?.filter(
-              (applicant: any) =>
-                applicant.applicantId == profile.id &&
-                applicant.applicationStatus == value
-            ).length > 0
-        )
+        jobList.filter((job: any) => {
+          let found = false;
+          job.applicants?.forEach((applicant: any) => {
+            if (
+              applicant.applicantId == user.id &&
+              applicant.applicantStatus == value
+            ) {
+              found = true;
+            }
+          });
+          return found;
+        })
       );
     }
   };
@@ -59,7 +78,7 @@ const JobHistory = () => {
           <Tabs.Panel value={activeTab}>
             <div className="flex mt-10 flex-wrap gap-5">
               {showList.map((job: any, index: any) => (
-                <Card key={index} {...job} applied />
+                <Card key={index} {...job} {...{[activeTab.toLowerCase()]:true}} />
               ))}
             </div>
           </Tabs.Panel>
