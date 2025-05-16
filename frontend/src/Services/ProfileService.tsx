@@ -1,7 +1,8 @@
 import axios from "axios";
+
 const base_url = "http://localhost:8080/profiles/";
 
-const getProfile = async (id: number) => {
+const getProfile = async (id: any) => {
   return axios
     .get(`${base_url}get/${id}`)
     .then((res) => res.data)
@@ -9,12 +10,8 @@ const getProfile = async (id: number) => {
       throw error;
     });
 };
+
 const updateProfile = async (profile: any) => {
-  if (!profile?.id) {
-    console.error("Update failed - Missing profile ID in:", profile);
-    throw new Error("Profile ID is required for update");
-  }
-  console.log("Profile ID: ", profile.id);
   return axios
     .put(`${base_url}update`, profile)
     .then((res) => res.data)
@@ -23,4 +20,13 @@ const updateProfile = async (profile: any) => {
     });
 };
 
-export { getProfile, updateProfile };
+const getAllProfiles = async () => {
+  return axios
+    .get(`${base_url}getall`)
+    .then((res) => res.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+
+export { getProfile, updateProfile, getAllProfiles };

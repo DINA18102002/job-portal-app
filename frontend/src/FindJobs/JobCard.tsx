@@ -12,18 +12,18 @@ import { changeProfile } from "../Slices/ProfileSlice";
 const JobCard = (props: any) => {
   const dispatch = useDispatch();
   const profile = useSelector((state: any) => state.profile);
-  const handleSaveJob = () => {
-    let savedJobs = Array.isArray(profile.savedJobs)
-      ? [...profile.savedJobs]
-      : [];
-    if (savedJobs?.includes(props.id)) {
-      savedJobs = savedJobs?.filter((id: any) => id !== props.id);
-    } else {
-      savedJobs = [...savedJobs, props.id];
+      const handleSaveJob =() =>{
+        let savedJobs:any = [...profile.savedJobs];
+        if (savedJobs?.includes(props.id)){
+            savedJobs = savedJobs?.filter((id:any)=> id !== props.id)
+        }
+        else{
+            savedJobs = [...savedJobs, props.id]
+        }
+
+        let updatedProfile = {...profile, savedJobs:savedJobs}
+        dispatch(changeProfile(updatedProfile))
     }
-    let updatedProfile = { ...profile, savedJobs: savedJobs, id:profile.id };
-    dispatch(changeProfile(updatedProfile));
-  };
   return (
     <div className="bg-mine-shaft-900 p-4 w-75 flex flex-col gap-3 rounded-xl hover:shadow-[0_0_5px_1px_yellow] !shadow-bright-sun-400">
       <div className="flex justify-between">

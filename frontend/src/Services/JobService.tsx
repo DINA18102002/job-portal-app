@@ -1,4 +1,5 @@
 import axios from "axios";
+import { error } from "console";
 const base_url = "http://localhost:8080/jobs/";
 const postJob = async (job: any) => {
   return axios
@@ -32,5 +33,21 @@ const applyJob = async (id: any, applicant: any) => {
       throw error;
     });
 };
+const getJobPostedBy = async (id: any) => {
+  return axios
+    .get(`${base_url}postedBy/${id}`)
+    .then((result) => result.data)
+    .catch((error) => {
+      throw error;
+    });
+};
+const changeAppStatus = async (application: any) => {
+  return axios
+    .post(`${base_url}changeAppStatus`, application)
+    .then((result) => result.data)
+    .catch((error) => {
+      throw error;
+    });
+};
 
-export { postJob, getAllJobs, getJob, applyJob };
+export { postJob, getAllJobs, getJob, applyJob, getJobPostedBy, changeAppStatus };
