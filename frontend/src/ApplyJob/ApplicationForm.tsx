@@ -88,7 +88,7 @@ const ApplicationForm = () => {
             className={`${preview ? "text-mine-shaft-300 font-semibold" : ""}`}
             label="Full Name"
             withAsterisk
-            placeholder="Enter Name"
+            placeholder="John Doe"
           />
           <TextInput
             {...form.getInputProps("email")}
@@ -97,7 +97,7 @@ const ApplicationForm = () => {
             className={`${preview ? "text-mine-shaft-300 font-semibold" : ""}`}
             label="Email"
             withAsterisk
-            placeholder="Enter email"
+            placeholder="johndoe@gmail.com"
           />
         </div>
         <div className="flex gap-10 [&>*]:w-1/2">
@@ -112,7 +112,7 @@ const ApplicationForm = () => {
             min={0}
             max={9999999999}
             clampBehavior="strict"
-            placeholder="Enter phone number"
+            placeholder="9876543210"
           />
           <TextInput
             {...form.getInputProps("website")}
@@ -121,7 +121,7 @@ const ApplicationForm = () => {
             className={`${preview ? "text-mine-shaft-300 font-semibold" : ""}`}
             label="Personal Portfolio"
             withAsterisk
-            placeholder="Enter url"
+            placeholder="www.example.com"
           />
         </div>
         <FileInput
@@ -132,8 +132,8 @@ const ApplicationForm = () => {
           className={`${preview ? "text-mine-shaft-300 font-semibold" : ""}`}
           leftSection={<IconPaperclip stroke={1.5} />}
           withAsterisk
-          label="Attach Resume"
-          placeholder="Your CV"
+          label="Attach your CV"
+          placeholder="Olny pdf and docx are accepted"
           leftSectionPointerEvents="none"
         />
         <Textarea
@@ -141,7 +141,7 @@ const ApplicationForm = () => {
           readOnly={preview}
           variant={preview ? "unstyled" : "default"}
           className={`${preview ? "text-mine-shaft-300 font-semibold" : ""}`}
-          placeholder="Type something about yourself..."
+          placeholder="Describe yourself to the Hiring Manager..."
           withAsterisk
           label="Cover Letter"
           autosize
@@ -158,7 +158,7 @@ const ApplicationForm = () => {
               fullWidth
               onClick={handlePreview}
               color="bright-sun.4"
-              variant="putline"
+              variant="outline"
             >
               Edit
             </Button>
@@ -173,7 +173,6 @@ const ApplicationForm = () => {
           </div>
         )}
       </div>
-      
     </div>
   );
 };
