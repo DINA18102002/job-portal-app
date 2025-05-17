@@ -7,10 +7,12 @@ import com.jobportal.dto.Application;
 import com.jobportal.dto.JobDTO;
 import com.jobportal.exception.JobPortalException;
 
+import jakarta.validation.Valid;
+
 
 public interface JobService {
 
-	public JobDTO postJOb(JobDTO jobDTO) throws JobPortalException;
+	public JobDTO postJob(@Valid JobDTO jobDTO) throws JobPortalException;
 
 	public List<JobDTO> getAllJobs();
 

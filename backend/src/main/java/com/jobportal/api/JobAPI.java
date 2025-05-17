@@ -37,14 +37,14 @@ public class JobAPI {
 		return new ResponseEntity<>(jobService.postJOb(jobDTO), HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/getAll")
+	@GetMapping("/get-all")
 	public ResponseEntity<List<JobDTO>> getAllJobs() throws JobPortalException{	
-		return new ResponseEntity<>(jobService.getAllJobs(), HttpStatus.CREATED);
+		return new ResponseEntity<>(jobService.getAllJobs(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/get/{id}")
 	public ResponseEntity<JobDTO> getJob(@PathVariable Long id) throws JobPortalException{
-		return new ResponseEntity<>(jobService.getJob(id), HttpStatus.CREATED);
+		return new ResponseEntity<>(jobService.getJob(id), HttpStatus.OK);
 	}
 	
 	@PostMapping("/apply/{id}")
@@ -53,13 +53,14 @@ public class JobAPI {
 		return new ResponseEntity<>(new ResponseDTO("Applied Successfully"), HttpStatus.OK);
 	}
 	
-	@GetMapping("/postedBy/{id}")
+	@GetMapping("/posted-byy/{id}")
 	public ResponseEntity<List<JobDTO>> getJobsPostedBy(@PathVariable Long id) throws JobPortalException{	
-		return new ResponseEntity<>(jobService.getJobsPostedBy(id), HttpStatus.CREATED);
+		return new ResponseEntity<>(jobService.getJobsPostedBy(id), HttpStatus.OK);
 	}
 	
-	@PostMapping("/changeAppStatus")
+	@PostMapping("/change-app-status")
 	public ResponseEntity<ResponseDTO> changeAppStatus(@RequestBody Application application) throws JobPortalException{
+//		System.out.println("application Statusd:"+application.toString());
 		jobService.changeAppStatus(application);
 		return new ResponseEntity<>(new ResponseDTO("Application Status changed Successfully"), HttpStatus.OK);
 	}

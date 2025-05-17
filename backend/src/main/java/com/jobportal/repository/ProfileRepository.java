@@ -5,5 +5,4 @@ import com.jobportal.entity.Profile;
 
 public interface ProfileRepository extends MongoRepository<Profile, Long> {
 
-
 }

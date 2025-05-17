@@ -9,24 +9,26 @@ import {
   successNotification,
 } from "../Services/NotoficationService";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const PostJob = () => {
+  const profile = useSelector((state: any) => state.profile);
   const navigate = useNavigate();
   const select = fields;
 
   const form = useForm({
-    mode:'controlled',
-    validateInputOnChange:true,
+    mode: "controlled",
+    validateInputOnChange: true,
     initialValues: {
-      jobTitle: '',
-      company: '',
-      experience: '',
-      jobType: '',
-      location: '',
-      packageOffered: '',
+      jobTitle: "",
+      company: "",
+      experience: "",
+      jobType: "",
+      location: "",
+      packageOffered: "",
       skillsRequired: [],
-      about: '',
-      description: content
+      about: "",
+      description: content,
     },
     validate: {
       jobTitle: isNotEmpty("Title is Required"),
@@ -38,23 +40,31 @@ const PostJob = () => {
       skillsRequired: isNotEmpty("SkillsRequired is Required"),
       about: isNotEmpty("About is Required"),
       description: isNotEmpty("Description is Required"),
-    }
+    },
   });
 
   const handlePost = () => {
     form.validate();
     if (!form.isValid()) return;
-    postJob(form.getValues())
+    postJob({ ...form.getValues(), postedBy: profile.id, jobStatus: "ACTIVE" })
       .then((res) => {
         successNotification("Success", "Job Posted Successfully");
-        navigate("/posted-job");
+        navigate(`/posted-job/${res.id}`);
       })
       .catch((err) => {
         console.log(err);
-        errorNotification(
-          "Error",
-          err.response.data.errorMessage
-        );
+        errorNotification("Error", err.response.data.errorMessage);
+      });
+  };
+  const handleDraft = () => {
+    postJob({ ...form.getValues(), postedBy: profile.id, jobStatus: "DRAFT" })
+      .then((res) => {
+        successNotification("Success", "Job Drafted Successfully");
+        navigate(`/posted-job/${res.id}`);
+      })
+      .catch((err) => {
+        console.log(err);
+        errorNotification("Error", err.response.data.errorMessage);
       });
   };
 
@@ -110,7 +120,7 @@ const PostJob = () => {
           <Button onClick={handlePost} color="bright-sun.4" variant="light">
             Publish Job
           </Button>
-          <Button color="bright-sun.4" variant="outline">
+          <Button color="bright-sun.4" onClick={handleDraft} variant="outline">
             Save as Draft
           </Button>
         </div>
