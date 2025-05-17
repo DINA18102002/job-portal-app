@@ -34,7 +34,7 @@ public class JobAPI {
 	
 	@PostMapping("/post")
 	public ResponseEntity<JobDTO> postJob(@RequestBody @Valid JobDTO jobDTO) throws JobPortalException{
-		return new ResponseEntity<>(jobService.postJOb(jobDTO), HttpStatus.CREATED);
+		return new ResponseEntity<>(jobService.postJob(jobDTO), HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/get-all")
@@ -53,7 +53,7 @@ public class JobAPI {
 		return new ResponseEntity<>(new ResponseDTO("Applied Successfully"), HttpStatus.OK);
 	}
 	
-	@GetMapping("/posted-byy/{id}")
+	@GetMapping("/posted-by/{id}")
 	public ResponseEntity<List<JobDTO>> getJobsPostedBy(@PathVariable Long id) throws JobPortalException{	
 		return new ResponseEntity<>(jobService.getJobsPostedBy(id), HttpStatus.OK);
 	}

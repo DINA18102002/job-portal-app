@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.jobportal.dto.LoginDTO;
+import com.jobportal.dto.NotificationDTO;
 import com.jobportal.dto.ResponseDTO;
 import com.jobportal.dto.UserDTO;
 import com.jobportal.entity.OTP;
@@ -42,21 +43,23 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private JavaMailSender mailSender;
 	
+	private NotificationService notificationService;
+	
 	@Override
 	public UserDTO registerUser(UserDTO userDTO) throws JobPortalException {
-		Optional <User> optional = userRepository.findByEmail(userDTO.getEmail());
-		if(optional.isPresent())throw new JobPortalException("USER_FOUND");
-		userDTO.setProfileId(profileService.createProfile(userDTO.getEmail()));
-		userDTO.setId(Utilities.getNextSequence("users"));
-		userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-		User user = userDTO.toEntity();
-		user = userRepository.save(user);
-		return user.toDTO();
+		Optional<User> optional = userRepository.findByEmail(userDTO.getEmail().trim());
+        if(optional.isPresent()) throw new JobPortalException("USER_FOUND");
+        userDTO.setProfileId(profileService.createProfile(userDTO.getEmail(), userDTO.getName()));
+        userDTO.setId(Utilities.getNextSequence("users"));
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        User user = userDTO.toEntity();
+        user = userRepository.save(user);
+        return  user.toDTO();
 	}
 
 	@Override
 	public UserDTO loginUser(LoginDTO loginDTO) throws JobPortalException {
-		User user = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(()->new JobPortalException("USER_NOT_FOUND"));
+		User user = userRepository.findByEmail(loginDTO.getEmail().trim()).orElseThrow(()->new JobPortalException("USER_NOT_FOUND"));
 		if(!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) throw new JobPortalException("INVALID_CREDENTIALS");
 		return user.toDTO();
 	}
@@ -67,7 +70,7 @@ public class UserServiceImpl implements UserService {
 		MimeMessage mm = mailSender.createMimeMessage();
 		MimeMessageHelper message = new MimeMessageHelper(mm, true);
 		message.setTo(email);
-		message.setSubject("Your OTP code");
+		message.setSubject("Your OTP code for JOBSY");
 		String genOtp = Utilities.generateOTP();
 		OTP otp = new OTP(email, genOtp, LocalDateTime.now());
 		otpRepository.save(otp);
@@ -85,18 +88,23 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseDTO changePassword(LoginDTO loginDTO) throws JobPortalException {
-		User user = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(()->new JobPortalException("USER_NOT_FOUND"));
-		user.setPassword(passwordEncoder.encode(loginDTO.getPassword()));
-		userRepository.save(user);
-		return new ResponseDTO("password Changed Successfully!");
+		User user= userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(()-> new JobPortalException("USER_NOT_FOUND"));
+        user.setPassword(passwordEncoder.encode(loginDTO.getPassword()));
+        userRepository.save(user);
+        NotificationDTO notificationDto = new NotificationDTO();
+        notificationDto.setUserId(user.getId());
+        notificationDto.setMessage("Password Reset Successful");
+        notificationDto.setAction("Password Reset");
+        notificationService.sendNotification(notificationDto);
+        return new ResponseDTO("Password changed successfully");
 	}
 	
-	@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = 60000) //execute every 1 minute
 	public void removeExpiredOTPs() {
 		LocalDateTime expiry = LocalDateTime.now().minusMinutes(5);
 		List<OTP> expiredOTPs = otpRepository.findByCreationTimeBefore(expiry);
 		if(!expiredOTPs.isEmpty()) {
-			otpRepository.deleteAll();
+			otpRepository.deleteAll(expiredOTPs);
 			System.out.println("Removed "+ expiredOTPs.size() +" expired OTPs" );
 		}
 	}
