@@ -3,7 +3,7 @@ import { jobList } from "../Data/JobsData";
 import Card from "./Card";
 import { useEffect, useState } from "react";
 import { getAllJobs } from "../Services/JobService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const JobHistory = () => {
   const profile = useSelector((state: any) => state.profile);
@@ -78,7 +78,11 @@ const JobHistory = () => {
           <Tabs.Panel value={activeTab}>
             <div className="flex mt-10 flex-wrap gap-5">
               {showList.map((job: any, index: any) => (
-                <Card key={index} {...job} {...{[activeTab.toLowerCase()]:true}} />
+                <Card
+                  key={index}
+                  {...job}
+                  {...{ [activeTab.toLowerCase()]: true }}
+                />
               ))}
             </div>
           </Tabs.Panel>

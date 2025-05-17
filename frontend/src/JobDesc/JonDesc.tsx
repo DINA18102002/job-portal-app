@@ -14,6 +14,11 @@ import { timeAgo } from "../Services/Utilities";
 import { useDispatch, useSelector } from "react-redux";
 import { changeProfile } from "../Slices/ProfileSlice";
 import { useEffect, useState } from "react";
+import { postJob } from "../Services/JobService";
+import {
+  errorNotification,
+  successNotification,
+} from "../Services/NotoficationService";
 
 const JobDesc = (props: any) => {
   const dispatch = useDispatch();
@@ -42,17 +47,30 @@ const JobDesc = (props: any) => {
       setApplied(true);
     } else setApplied(false);
   }, [props]);
+  const handleClose = () => {
+    postJob({ ...props, jobStatus: "CLOSED" })
+      .then((res) => {
+        successNotification("Closed", "Job closed Successfully");
+      })
+      .catch((err) => {
+        errorNotification("Error", err.response.data.errorMessage);
+      });
+  };
   return (
     <div className="w-3/4">
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
           <div className="p-3 bg-mine-shaft-800 rounded-xl">
-            <img className="h-14 " src={`/Icons/${props.company}.png`} alt="" />
+            <img
+              className="h-14 "
+              src={`/Icons/${props.company}.png`}
+              alt={props.company}
+            />
           </div>
           <div className="flex flex-col">
             <div className="font-semibold text-2xl">{props.jobTitle}</div>
             <div className="text-lg text-mine-shaft-300">
-              {props.company} &bull; {timeAgo(props.postTime)} &bull;{" "}
+              {props.company} &middot; {timeAgo(props.postTime)} &middot;{" "}
               {props.applicants ? props.applicants.length : 0} Applicants
             </div>
           </div>
@@ -62,16 +80,16 @@ const JobDesc = (props: any) => {
             (!applied && (
               <Link to={`/apply-job/${props.id}`}>
                 <Button color="bright-sun.4" size="sm" variant="light">
-                  {props.edit ? "Edit" : "Apply"}
+                  {props.closed ? "Reopen" : props.edit ? "Edit" : "Apply"}
                 </Button>
               </Link>
             ))}
-          {applied && (
+          {!props.edit && applied && (
             <Button color="green.8" size="sm" variant="light">
               Applied
             </Button>
           )}
-          {props.edit ? (
+          {props.edit && !props.closed ? (
             <Button color="red.5" size="sm" variant="outline">
               Delete
             </Button>
@@ -102,8 +120,8 @@ const JobDesc = (props: any) => {
             </ActionIcon>
             <div className="text-mine-shaft-300 text-sm">{item.name}</div>
             <div className="font-semibold ">
-              {props ? props[item.id] : "NA"}{" "}
-              {item.id == "packageOffered" && <>LPA</>}{" "}
+              {props ? props[item.id] : "NA"}
+              {item.id == "packageOffered" && <>LPA</>}
             </div>
           </div>
         ))}
@@ -147,7 +165,7 @@ const JobDesc = (props: any) => {
               <img
                 className="h-8 "
                 src={`/Icons/${props.company}.png`}
-                alt=""
+                alt="microsoft"
               />
             </div>
             <div className="flex flex-col">
@@ -162,11 +180,12 @@ const JobDesc = (props: any) => {
           </Link>
         </div>
         <div className="text-mine-shaft-300 text-justify">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Velit
-          cumque, expedita vitae ipsa illo, debitis unde voluptas inventore
-          dignissimos nesciunt impedit aliquid a veniam nostrum minima obcaecati
-          consequatur minus quae quasi nemo. Ducimus beatae excepturi expedita
-          asperiores incidunt magni ipsam?
+          We are a leading organization committed to delivering innovative
+          solutions and exceptional service across a wide range of industries.
+          Our mission is to drive business transformation through technology,
+          collaboration, and customer-centric strategies. With a focus on
+          excellence and integrity, we strive to create meaningful impact and
+          long-term value for our clients, partners, and communities.
         </div>
       </div>
     </div>

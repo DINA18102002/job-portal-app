@@ -3,18 +3,37 @@ import { content, fields } from "../Data/PostJob";
 import SelectInput from "./SelectInput";
 import TextEditor from "./RichTextEditor";
 import { isNotEmpty, useForm } from "@mantine/form";
-import { postJob } from "../Services/JobService";
+import { getJob, postJob } from "../Services/JobService";
 import {
   errorNotification,
   successNotification,
 } from "../Services/NotoficationService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const PostJob = () => {
-  const profile = useSelector((state: any) => state.profile);
+  const { id } = useParams();
+  const [editorData, setEditorData] = useState(content);
+  const user = useSelector((state: any) => state.user);
   const navigate = useNavigate();
   const select = fields;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (id !== "0") {
+      getJob(id)
+        .then((res: any) => {
+          form.setValues(res);
+          setEditorData(res.description);
+        })
+        .catch((err: any) => {
+          console.log(err);
+        });
+    } else {
+      form.reset();
+      setEditorData(content);
+    }
+  }, [id]);
 
   const form = useForm({
     mode: "controlled",
@@ -46,7 +65,7 @@ const PostJob = () => {
   const handlePost = () => {
     form.validate();
     if (!form.isValid()) return;
-    postJob({ ...form.getValues(), postedBy: profile.id, jobStatus: "ACTIVE" })
+    postJob({ ...form.getValues(), postedBy: user.id, jobStatus: "ACTIVE" })
       .then((res) => {
         successNotification("Success", "Job Posted Successfully");
         navigate(`/posted-job/${res.id}`);
@@ -57,14 +76,17 @@ const PostJob = () => {
       });
   };
   const handleDraft = () => {
-    postJob({ ...form.getValues(), postedBy: profile.id, jobStatus: "DRAFT" })
+    postJob({ ...form.getValues(), postedBy: user.id, jobStatus: "DRAFT" })
       .then((res) => {
         successNotification("Success", "Job Drafted Successfully");
         navigate(`/posted-job/${res.id}`);
       })
       .catch((err) => {
         console.log(err);
-        errorNotification("Error", err.response.data.errorMessage);
+        errorNotification(
+          "Something went wrong",
+          err.response.data.errorMessage
+        );
       });
   };
 

@@ -6,8 +6,12 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Superscript from "@tiptap/extension-superscript";
 import SubScript from "@tiptap/extension-subscript";
+import { useEffect } from "react";
 
-const TextEditor = (props:any) => {
+const TextEditor = (props: any) => {
+  useEffect(()=>{
+    editor?.commands.setContent(props.data)
+  }, [props.data])
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -18,9 +22,9 @@ const TextEditor = (props:any) => {
       Highlight,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
     ],
-    content:props.form.getValues().description,
-    onUpdate({editor}){
-      props.form.setFieldValue('description', editor?.getHTML());
+    content: props.form.getValues().description,
+    onUpdate({ editor }) {
+      props.form.setFieldValue("description", editor?.getHTML());
     },
   });
 

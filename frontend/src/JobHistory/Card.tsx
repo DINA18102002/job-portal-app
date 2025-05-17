@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Card = (props: any) => {
   const dispatch = useDispatch();
-  const profile = useSelector((state:any)=>state.profile);
+  const profile = useSelector((state: any) => state.profile);
   const handleSaveJob = () => {
     let savedJobs = Array.isArray(profile.savedJobs)
       ? [...profile.savedJobs]
@@ -30,12 +30,16 @@ const Card = (props: any) => {
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
           <div className="p-2 bg-mine-shaft-800 rounded-md">
-            <img className="h-7" src={`/Icons/${props.company}.png`} alt="" />
+            <img
+              className="h-7"
+              src={`/Icons/${props.company}.png`}
+              alt="microsoft"
+            />
           </div>
           <div className="flex flex-col">
             <div className="font-semibold text-lg">{props.jobTitle}</div>
             <div className="text-xs text-mine-shaft-300 font-semibold">
-              {props.company} &#x2022;{" "}
+              {props.company} &middot;
               {props.applicants ? props.applicants.length : 0} Applicants
             </div>
           </div>
@@ -61,7 +65,7 @@ const Card = (props: any) => {
         className="!text-xs !text-justify !text-mine-shaft-300"
         lineClamp={2}
       >
-        {props.description}
+        {props.about}
       </Text>
       <Divider size="xs" color="mine-shaft.7" />
       <div className="flex justify-between">
