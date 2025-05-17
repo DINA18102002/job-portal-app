@@ -10,26 +10,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeProfile } from "../Slices/ProfileSlice";
 
 const JobCard = (props: any) => {
-  const dispatch = useDispatch();
   const profile = useSelector((state: any) => state.profile);
-      const handleSaveJob =() =>{
-        let savedJobs:any = [...profile.savedJobs];
-        if (savedJobs?.includes(props.id)){
-            savedJobs = savedJobs?.filter((id:any)=> id !== props.id)
-        }
-        else{
-            savedJobs = [...savedJobs, props.id]
-        }
-
-        let updatedProfile = {...profile, savedJobs:savedJobs}
-        dispatch(changeProfile(updatedProfile))
+  const dispatch = useDispatch();
+  const handleSaveJob = () => {
+    let savedJobs: any = [...profile.savedJobs];
+    if (savedJobs?.includes(props.id)) {
+      savedJobs = savedJobs?.filter((id: any) => id !== props.id);
+    } else {
+      savedJobs = [...savedJobs, props.id];
     }
+
+    let updatedProfile = { ...profile, savedJobs: savedJobs };
+    dispatch(changeProfile(updatedProfile));
+  };
   return (
     <div className="bg-mine-shaft-900 p-4 w-75 flex flex-col gap-3 rounded-xl hover:shadow-[0_0_5px_1px_yellow] !shadow-bright-sun-400">
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
           <div className="p-2 bg-mine-shaft-800 rounded-md">
-            <img className="h-7" src={`/Icons/${props.company}.png`} alt="" />
+            <img className="h-7" src={`/Icons/${props.company}.png`} alt={props.company} />
           </div>
           <div className="flex flex-col">
             <div className="font-semibold text-lg">{props.jobTitle}</div>
@@ -37,7 +36,7 @@ const JobCard = (props: any) => {
               <Link to="/company" className="hover:text-mine-shaft-200">
                 {props.company}
               </Link>
-              &#x2022; {props.applicants ? props.applicants.length : 0}
+              &middot; {props.applicants ? props.applicants.length : 0}
               Applicants
             </div>
           </div>
