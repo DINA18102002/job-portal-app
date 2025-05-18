@@ -26,7 +26,7 @@ public class NotificationAPI {
 	@Autowired
 	private NotificationService notificationService;
 	
-	@GetMapping("/get/{userId")
+	@GetMapping("/get/{userId}")
 	public ResponseEntity<List<Notification>> getNotifications(@PathVariable Long userId){
 		return new ResponseEntity<>(notificationService.getUnreadNotifications(userId), HttpStatus.OK);
 	}
