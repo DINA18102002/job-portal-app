@@ -8,42 +8,41 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getProfile } from "../Services/ProfileService";
 import { setProfile } from "../Slices/ProfileSlice";
-import DarkMode from "./DarkMode";
 import NotificationMenu from "./NotificationMenu";
 
 function Header() {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user);
   const location = useLocation();
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (!user || user === null) return;
-
-      try {
-        const data = await getProfile(user.profileId);
-        dispatch(setProfile(data));
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-
-    fetchProfile();
-  }, [user, dispatch]);
-
   // useEffect(() => {
-  //     // if (!user) return; // added by me
-  //     if (user === null ){
-  //     }
-  //     else{
-  //         getProfile(user.profileId).then((data: any) => {
-  //             dispatch(setProfile(data));
+  //   const fetchProfile = async () => {
+  //     if (!user || user === null) return;
 
-  //         }).catch((error) => {
-  //             console.log(error)
-  //         });
+  //     try {
+  //       const data = await getProfile(user.profileId);
+  //       dispatch(setProfile(data));
+  //     } catch (error) {
+  //       console.error("Error fetching profile:", error);
   //     }
+  //   };
 
-  // }, [])
+  //   fetchProfile();
+  // }, [user, dispatch]);
+
+  useEffect(() => {
+      if (!user) return; // added by me
+      if (user === null ){
+      }
+      else{
+          getProfile(user.profileId).then((data: any) => {
+              dispatch(setProfile(data));
+
+          }).catch((error) => {
+              console.log(error)
+          });
+      }
+
+  }, [])
   return location.pathname != "/signup" && location.pathname != "/login" ? (
     <div className="w-full bg-mine-shaft-950 h-20 text-white flex justify-between px-6 items-center font-['poppins']">
       <div className="flex gap-3 items-center text-bright-sun-400 ">

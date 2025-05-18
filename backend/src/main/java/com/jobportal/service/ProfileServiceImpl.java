@@ -1,5 +1,6 @@
 package com.jobportal.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jobportal.dto.Experience;
 import com.jobportal.dto.ProfileDTO;
 import com.jobportal.entity.Profile;
 import com.jobportal.exception.JobPortalException;
@@ -37,15 +39,31 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Override
 	public ProfileDTO getProfile(Long id) throws JobPortalException {
-		profileRepository.findById(id).ifPresent(profile->{
-			profile.getExperiences().stream().filter(experience -> experience.getWorking()==true).filter(experience -> !experience.getEndDate().toLocalDate().isEqual(LocalDateTime.now().toLocalDate())).forEach(experience -> {
-				experience.setEndDate(LocalDateTime.now());
-				profile.setTotalExp(calculateTotalExp(profile.toDTO()));
-				profileRepository.save(profile);
-			});
-		});
-		return profileRepository.findById(id).orElseThrow(()->new JobPortalException("PROFILE_NOT_FOUND")).toDTO();
+	    Profile profile = profileRepository.findById(id)
+	        .orElseThrow(() -> new JobPortalException("PROFILE_NOT_FOUND"));
+
+	    List<Experience> experiences = profile.getExperiences();
+	    if (experiences != null && !experiences.isEmpty()) {
+	        boolean updated = false;
+	        for (Experience exp : experiences) {
+	            if (Boolean.TRUE.equals(exp.getWorking()) &&
+	                exp.getEndDate() != null &&
+	                !exp.getEndDate().toLocalDate().isEqual(LocalDate.now())) {
+
+	                exp.setEndDate(LocalDateTime.now());
+	                updated = true;
+	            }
+	        }
+
+	        if (updated) {
+	            profile.setTotalExp(calculateTotalExp(profile.toDTO()));
+	            profileRepository.save(profile);
+	        }
+	    }
+
+	    return profile.toDTO();
 	}
+
 
 	@Override
 	public ProfileDTO updateProfile(ProfileDTO profileDTO) throws JobPortalException {
