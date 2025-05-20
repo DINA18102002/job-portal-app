@@ -137,7 +137,7 @@ const ExpInput = (props: any) => {
         onChange={(event) =>
           form.setFieldValue("working", event.currentTarget.checked)
         }
-        autoContrast
+        
         label="currently i'm working here"
       />
       <div className="flex gap-5">

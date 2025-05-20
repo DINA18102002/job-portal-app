@@ -2,6 +2,8 @@ package com.jobportal.jwt;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +26,14 @@ public class JwtHelper {
 
     // Generate token
     public static String generateToken(UserDetails userDetails) {
+    	Map<String, Object> claims = new HashMap<>();
+    	CustomUserDetails customUser = (CustomUserDetails)userDetails;
+    	claims.put("id", customUser.getId());
+    	claims.put("name", customUser.getName());
+    	claims.put("accountType", customUser.getAccountType());
+    	claims.put("profileId", customUser.getProfileId());
         return Jwts.builder()
+        		.setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

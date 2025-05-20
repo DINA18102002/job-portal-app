@@ -132,15 +132,15 @@ const SignUp = () =>{
                 withAsterisk
                 >
                 <Group mt="xs">
-                    <Radio className="py-4 px-6 border hover:bg-mine-shaft-900 has-[:checked]:bg-bright-sun-400/5 has-[:checked]:border-bright-sun-400 border-mine-shaft-800 rounded-lg" autoContrast value="APPLICANT" label="Applicant" />
-                    <Radio className="py-4 px-6 border hover:bg-mine-shaft-900 has-[:checked]:bg-bright-sun-400/5 has-[:checked]:border-bright-sun-400 border-mine-shaft-800 rounded-lg"  autoContrast value="EMPLOYER" label="Employer" />
+                    <Radio className="py-4 px-6 border hover:bg-mine-shaft-900 has-[:checked]:bg-bright-sun-400/5 has-[:checked]:border-bright-sun-400 border-mine-shaft-800 rounded-lg"  value="APPLICANT" label="Applicant" />
+                    <Radio className="py-4 px-6 border hover:bg-mine-shaft-900 has-[:checked]:bg-bright-sun-400/5 has-[:checked]:border-bright-sun-400 border-mine-shaft-800 rounded-lg"   value="EMPLOYER" label="Employer" />
                 </Group>
             </Radio.Group>
             <Checkbox
                 label={<>I accept{` `}<Anchor>terms and Conditions.</Anchor>  </>}
-                autoContrast
+                
             />
-            <Button loading={loading} onClick={handleSubmit} variant="filled" autoContrast>SignUp</Button>
+            <Button loading={loading} onClick={handleSubmit} variant="filled" >SignUp</Button>
             <div className="mx-auto">have an Account? <span onClick={()=>{navigate("/login"); setFormError(form); setData(form)}} className="text-bright-sun-400 hover:underline cursor-pointer">Login</span></div>
             </div>
             </>

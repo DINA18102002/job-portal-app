@@ -83,7 +83,7 @@ const ResetPassword = (props:any) =>{
                     label="Email" 
                     withAsterisk
                     placeholder="Your Email"
-                    rightSection={<Button size="xs" className="mr-1" loading={otpSending && !otpSent} onClick={handleSendOtp} autoContrast variant="filled" disabled={email==="" || otpSent} >Login</Button>}
+                    rightSection={<Button size="xs" className="mr-1" loading={otpSending && !otpSent} onClick={handleSendOtp}  variant="filled" disabled={email==="" || otpSent} >Login</Button>}
                     rightSectionWidth="xl"
                     />
                 {
@@ -93,8 +93,8 @@ const ResetPassword = (props:any) =>{
                 {
                     otpSent && !verified &&
                     <div className="flex gap-2">
-                        <Button fullWidth color="bright-sun.4" loading={otpSending} onClick={resendOtp} autoContrast variant="light" >{resendLoader?seconds:"Resend"}</Button>
-                        <Button fullWidth color="bright-sun.4" onClick={changeEmail} autoContrast variant="filled" >Change Email</Button>
+                        <Button fullWidth color="bright-sun.4" loading={otpSending} onClick={resendOtp}  variant="light" >{resendLoader?seconds:"Resend"}</Button>
+                        <Button fullWidth color="bright-sun.4" onClick={changeEmail}  variant="filled" >Change Email</Button>
                     </div>
                 }
                 {verified && (
@@ -110,7 +110,7 @@ const ResetPassword = (props:any) =>{
                   />
                 )}
                 {
-                    verified && <Button onClick={handleResetPassword} autoContrast variant="filled" >Change Password</Button>
+                    verified && <Button onClick={handleResetPassword}  variant="filled" >Change Password</Button>
                 }
 
             </div>

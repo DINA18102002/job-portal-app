@@ -2,18 +2,24 @@ import { ClassNames } from "@emotion/react";
 import { IconAnchor, IconBell, IconSettings } from "@tabler/icons-react";
 import { Indicator, Avatar, Button } from "@mantine/core";
 import NavLinks from "./NavLinks";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ProfileMenu from "./ProfileMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getProfile } from "../Services/ProfileService";
 import { setProfile } from "../Slices/ProfileSlice";
 import NotificationMenu from "./NotificationMenu";
+import { jwtDecode } from "jwt-decode";
+import { setUser } from "../Slices/UserSlice";
+import { isEmail } from "@mantine/form";
+import { setupResponseInterceptor } from "../Interceptor/AxiosInterceptor";
 
 function Header() {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user);
+  const token = useSelector((state:any)=>state.jwt);
   const location = useLocation();
+  const navigate = useNavigate();
   // useEffect(() => {
   //   const fetchProfile = async () => {
   //     if (!user || user === null) return;
@@ -30,19 +36,26 @@ function Header() {
   // }, [user, dispatch]);
 
   useEffect(() => {
-      if (!user) return; // added by me
-      if (user === null ){
-      }
-      else{
-          getProfile(user.profileId).then((data: any) => {
-              dispatch(setProfile(data));
+    setupResponseInterceptor(navigate);
+  }, [navigate]);
 
-          }).catch((error) => {
-              console.log(error)
-          });
+  useEffect(() => {
+    if (!user) return; // added by me
+    if (user === null) {
+    } else {
+      if (token != "") {
+        const decoded = jwtDecode(token);
+        dispatch(setUser({ ...decoded, email: decoded.sub }));
       }
-
-  }, [])
+      getProfile(user?.profileId)
+        .then((data: any) => {
+          dispatch(setProfile(data));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [token, navigate]);
   return location.pathname != "/signup" && location.pathname != "/login" ? (
     <div className="w-full bg-mine-shaft-950 h-20 text-white flex justify-between px-6 items-center font-['poppins']">
       <div className="flex gap-3 items-center text-bright-sun-400 ">
