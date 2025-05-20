@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -12,9 +13,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
+@Component 
 public class JwtHelper {
 
-    private static final String SECRET_KEY = "your-512-bit-secret-your-512-bit-secret-your-512-bit-secret"; // Use Base64 encoded 512-bit key
+    private static final String SECRET_KEY = "eIAgx9ZyYd05P4p6V7WaluWOE2UjoQy57Wxe2ArhbfKTr6OgQTdF1WdMGYPKGXqS\r\n"
+    		+ "Zeyy4gWsWhNKx4NIM822Gw=="; // Use Base64 encoded 512-bit key
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
 
     private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());

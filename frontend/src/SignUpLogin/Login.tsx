@@ -88,7 +88,7 @@ const Login = () =>{
                 withAsterisk
             />     
               
-            <Button onClick={handleSubmit} loading={loading} variant="filled" autoContrast>Login</Button>
+            <Button onClick={handleSubmit} loading={loading} variant="filled" >Login</Button>
             <div className="mx-auto">Don't have an Account? <span  onClick={()=>{navigate("/signup"); setFormError(form); setData(form)}} className="text-bright-sun-400 hover:underline cursor-pointer">SignUp</span></div>
             <div onClick={open} className="text-bright-sun-400 hover:underline cursor-pointer text-center">
                 Forget password?
