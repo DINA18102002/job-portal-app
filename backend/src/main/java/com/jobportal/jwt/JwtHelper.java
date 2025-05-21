@@ -18,14 +18,14 @@ import io.jsonwebtoken.security.Keys;
 @Component 
 public class JwtHelper {
 
-    private static final String SECRET_KEY = "eIAgx9ZyYd05P4p6V7WaluWOE2UjoQy57Wxe2ArhbfKTr6OgQTdF1WdMGYPKGXqS\r\n"
+    private final String SECRET_KEY = "eIAgx9ZyYd05P4p6V7WaluWOE2UjoQy57Wxe2ArhbfKTr6OgQTdF1WdMGYPKGXqS\r\n"
     		+ "Zeyy4gWsWhNKx4NIM822Gw=="; // Use Base64 encoded 512-bit key
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
+    private final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
 
-    private static final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
     // Generate token
-    public static String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails) {
     	Map<String, Object> claims = new HashMap<>();
     	CustomUserDetails customUser = (CustomUserDetails)userDetails;
     	claims.put("id", customUser.getId());
@@ -42,30 +42,30 @@ public class JwtHelper {
     }
 
     // Validate token
-    public static boolean validateToken(String token, String username) {
+    public boolean validateToken(String token, String username) {
         final String tokenUsername = extractUsername(token);
         return (tokenUsername.equals(username) && !isTokenExpired(token));
     }
 
     // Extract username
-    public static String extractUsername(String token) {
+    public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     // Check if token is expired
-    public static boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         final Date expiration = extractClaim(token, Claims::getExpiration);
         return expiration.before(new Date());
     }
 
     // Extract single claim
-    public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
     // Extract all claims
-    private static Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(key)

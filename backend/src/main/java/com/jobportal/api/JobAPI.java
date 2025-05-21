@@ -24,7 +24,7 @@ import com.jobportal.service.JobService;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @Validated
 @RequestMapping("/jobs")
 public class JobAPI {

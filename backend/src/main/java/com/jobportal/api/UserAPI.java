@@ -23,7 +23,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @Validated
 @RequestMapping("/users")
 public class UserAPI {

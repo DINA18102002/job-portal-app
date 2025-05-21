@@ -19,7 +19,7 @@ import com.jobportal.exception.JobPortalException;
 import com.jobportal.service.ProfileService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @Validated
 @RequestMapping("/profiles")
 public class ProfileAPI {

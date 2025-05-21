@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter  {
 
 	@Autowired
 	private JwtHelper jwtHelper;
@@ -41,10 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			catch(IllegalArgumentException e) {
 				e.printStackTrace();
 			}
-			catch(ExpiredJwtException e) {
-				e.printStackTrace();
-			}
-			catch(MalformedJwtException e) {
+			catch(ExpiredJwtException | MalformedJwtException e) {
 				e.printStackTrace();
 			}
 			catch(Exception e) {
