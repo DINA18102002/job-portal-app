@@ -1,6 +1,12 @@
 import { ClassNames } from "@emotion/react";
-import { IconAnchor, IconBell, IconSettings } from "@tabler/icons-react";
-import { Indicator, Avatar, Button } from "@mantine/core";
+import {
+  IconAnchor,
+  IconBell,
+  IconSettings,
+  IconX,
+  IconXboxX,
+} from "@tabler/icons-react";
+import { Indicator, Avatar, Button, Burger, Drawer } from "@mantine/core";
 import NavLinks from "./NavLinks";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ProfileMenu from "./ProfileMenu";
@@ -13,11 +19,22 @@ import { jwtDecode } from "jwt-decode";
 import { setUser } from "../Slices/UserSlice";
 import { isEmail } from "@mantine/form";
 import { setupResponseInterceptor } from "../Interceptor/AxiosInterceptor";
+import { useDisclosure } from "@mantine/hooks";
 
-function Header() {
+const links = [
+  { name: "Find Jobs", url: "find-jobs" },
+  { name: "Find Talent", url: "find-talent" },
+  { name: "Post Job", url: "post-job" },
+  { name: "Posted Job", url: "posted-job" },
+  { name: "Job History", url: "job-history" },
+  { name: "SignUp", url: "signup" },
+];
+
+const Header = () => {
   const dispatch = useDispatch();
+  const [opened, { open, close }] = useDisclosure(false);
   const user = useSelector((state: any) => state.user);
-  const token = useSelector((state:any)=>state.jwt);
+  const token = useSelector((state: any) => state.jwt);
   const location = useLocation();
   const navigate = useNavigate();
   // useEffect(() => {
@@ -83,10 +100,37 @@ function Header() {
           <IconSettings stroke={1.5} />
         </div>
         {user ? <NotificationMenu /> : <></>}
+        {}
+        <Burger opened={opened} onClick={open} aria-label="Toggle-navigation" />
+        <Drawer
+          size="xs"
+          overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
+          position="right"
+          opened={opened}
+          onClose={close}
+          closeButtonProps={{ icon: <IconX size={30} /> }}
+        >
+          <div className="flex flex-col gap-5 items-center">
+            {links.map((link, index) => (
+              <div
+                key={link.url}
+                className={` ${
+                  location.pathname == "/" + link.url
+                    ? "border-bright-sun-400 text-bright-sun-400"
+                    : "border-transparent"
+                } border-t-[3px] h-full flex items-center`}
+              >
+                <Link key={index} to={`/${link.url}`}>
+                  {link.name}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </Drawer>
       </div>
     </div>
   ) : (
     <></>
   );
-}
+};
 export default Header;
