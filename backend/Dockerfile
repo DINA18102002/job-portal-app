@@ -1,19 +1,16 @@
-# -------- Build Stage --------
+# ---- Build Stage ----
 FROM maven:3.8.5-openjdk-17 AS build
 
 WORKDIR /app
-
-# Copy only relevant files to avoid conflict with system directories like /bin
-COPY pom.xml .
-COPY src ./src
+COPY . .
 
 RUN mvn clean package -DskipTests
 
-# -------- Runtime Stage --------
+# ---- Runtime Stage ----
 FROM openjdk:17.0.1-jdk-slim
 
 WORKDIR /app
-COPY --from=build /app/target/JobPortal-0.01-SNAPSHOT.jar JobPortal.jar
+COPY --from=build /app/target/Job-Portal-0.0.1-SNAPSHOT.jar JobPortal.jar
 
 EXPOSE 9090
 
