@@ -1,7 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "http://172.26.98.203:30002",
   withCredentials:true,
 });
 

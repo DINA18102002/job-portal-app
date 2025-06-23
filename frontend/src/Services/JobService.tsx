@@ -1,6 +1,6 @@
 import axiosInstance from "../Interceptor/AxiosInterceptor";
 
-const base_url = "http://172.26.98.203:30001/jobs/";
+const base_url = "http://172.26.98.203:30002/jobs/";
 const postJob = async (job: any) => {
   return axiosInstance
     .post(`/jobs/post`, job)

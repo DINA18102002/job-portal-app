@@ -1,6 +1,6 @@
 import axiosInstance from "../Interceptor/AxiosInterceptor";
 
-const base_url = "http://172.26.98.203:30001/users/"
+const base_url = "http://172.26.98.203:30002"
 
 const registerUser = async (user:any)=>{
     return axiosInstance.post(`/users/register`, user)
