@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: job-backend
-          image: theena18/job-portal-backend
+          image: theena18/job-portal-backend:6
           ports:
             - containerPort: 9090
