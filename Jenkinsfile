@@ -28,6 +28,11 @@ pipeline {
         }
 
         stage('Frontend Build') {
+            agent {
+                docker{
+                    image 'node:18-alpine'
+                }
+            }
             steps {
                 dir('frontend') {
                     sh 'npm install'
