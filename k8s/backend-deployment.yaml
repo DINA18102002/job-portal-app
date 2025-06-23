@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: job-backend
+  template:
+    metadata:
+      labels:
+        app: job-backend
+    spec:
+      containers:
+        - name: job-backend
+          image: theena18/job-portal-backend
+          ports:
+            - containerPort: 9090

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: job-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: job-frontend
+  template:
+    metadata:
+      labels:
+        app: job-frontend
+    spec:
+      containers:
+        - name: job-frontend
+          image: theena18/job-portal-frontend
+          ports:
+            - containerPort: 80
