@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: job-frontend
-          image: theena18/job-portal-frontend:12
+          image: theena18/job-portal-frontend:13
           ports:
             - containerPort: 80
