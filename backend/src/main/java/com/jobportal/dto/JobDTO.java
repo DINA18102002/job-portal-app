@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JobDTO {
 	
-	private Long id;
+	private String id;
 	private String jobTitle;
 	private String company;
 	private List<ApplicantDTO> applicants;

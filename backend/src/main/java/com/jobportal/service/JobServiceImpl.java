@@ -30,8 +30,8 @@ public class JobServiceImpl implements JobService {
 
 	@Override
 	public JobDTO postJob(JobDTO jobDTO) throws JobPortalException {
-		if(jobDTO.getId() == 0) {
-			jobDTO.setId(Utilities.getNextSequence("jobs"));
+		if(jobDTO.getId() == null || jobDTO.getId().isBlank()) {
+			// jobDTO.setId(Utilities.getNextSequence("jobs"));
 			jobDTO.setPostTime(LocalDateTime.now());
 			NotificationDTO notificationDTO = new NotificationDTO();
 			notificationDTO.setAction("Job Posted");
@@ -59,12 +59,12 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public JobDTO getJob(Long id) throws JobPortalException {
+	public JobDTO getJob(String id) throws JobPortalException {
 		return jobRepository.findById(id).orElseThrow(()->new JobPortalException("JOB_NOT_FOUND")).toDTO();
 	}
 
 	@Override
-	public void applyJob(Long id, ApplicantDTO applicantDTO) throws JobPortalException {
+	public void applyJob(String id, ApplicantDTO applicantDTO) throws JobPortalException {
 		Job job = jobRepository.findById(id).orElseThrow(()->new JobPortalException("JOB_NOT_FOUND"));
 		List<Applicant> applicants = job.getApplicants();
 		if(applicants == null) applicants = new ArrayList<>();
@@ -76,8 +76,8 @@ public class JobServiceImpl implements JobService {
 	}
 
 	@Override
-	public List<JobDTO> getJobsPostedBy(Long id) {
-		return jobRepository.findByPostedBy(id).stream().map((x)->x.toDTO()).toList();
+	public List<JobDTO> getJobsPostedBy(String id) {
+		 return jobRepository.findByPostedBy(Long.valueOf(id)).stream().map(Job::toDTO).toList();
 	}
 
 	@Override

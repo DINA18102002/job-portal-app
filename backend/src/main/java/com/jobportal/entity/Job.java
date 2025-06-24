@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class Job {
 	
 	@Id
-	private Long id;
+	private String id;
 	private String jobTitle;
 	private String company;
 	private List<Applicant> applicants; 

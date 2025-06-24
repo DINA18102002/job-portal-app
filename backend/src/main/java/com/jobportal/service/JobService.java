@@ -16,11 +16,11 @@ public interface JobService {
 
 	public List<JobDTO> getAllJobs();
 
-	public JobDTO getJob(Long id) throws JobPortalException;
+	public JobDTO getJob(String id) throws JobPortalException;
 
-	public void applyJob(Long id, ApplicantDTO applicantDTO) throws JobPortalException;
+	public void applyJob(String id, ApplicantDTO applicantDTO) throws JobPortalException;
 
-	public List<JobDTO> getJobsPostedBy(Long id);
+	public List<JobDTO> getJobsPostedBy(String id);
 
 	public void changeAppStatus(Application application) throws JobPortalException;
 
